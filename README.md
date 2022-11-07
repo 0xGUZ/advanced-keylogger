@@ -1,4 +1,12 @@
 # advanced-keylogger v0.1
+
+### How To  Use:
+1-Change filepath;
+
+2-Change Email settings;
+
+3-Press ESC to stop program;
+
 ### Functionalities:
   -Keylogging
   
@@ -18,6 +26,11 @@
 
   -System info gathering
 
-  <sub>public and private ipv4, processor, machine, system and os version
+  <sub>public and private ipv4, processor and architecture, machine, system and os version
   
+  -Encryption
+  
+  <sub>automatically encripts your reports so they dont get opened by 'user'
+
   -TODO: Backdoor opening
+

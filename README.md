@@ -1,7 +1,7 @@
 # advanced-keylogger v0.1
 My keylogger implementation
 
-###Functionalities:
+### Functionalities:
   -Keylogging
   -Report File Gen
   -Screenshot Capturing

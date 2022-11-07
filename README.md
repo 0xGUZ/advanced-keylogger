@@ -15,5 +15,9 @@
   -Screenshot capturing
   
   -Audio recording
+
+  -System info gathering
+
+  <sub>public and private ipv4, processor, machine, system and os version
   
   -TODO: Backdoor opening

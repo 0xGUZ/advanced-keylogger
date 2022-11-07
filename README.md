@@ -2,8 +2,18 @@
 ### Functionalities:
   -Keylogging
   
-  -Report File Gen
+  <sub>using basic pynput lib</sub>
   
-  -Screenshot Capturing
+  -Report file generation
   
-  -Audio Recording
+  <sub>must implement reportfile hiding</sub>
+  
+  -PATCHED: Email report file auto send
+  
+  <sub>smtplib cant login to google anymore, must use different provider</sub>
+  
+  -Screenshot capturing
+  
+  -Audio recording
+  
+  -TODO: Backdoor opening

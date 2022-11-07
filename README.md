@@ -1,13 +1,16 @@
 # advanced-keylogger v0.1
 ### Functionalities:
   -Keylogging
-  using basic pynput lib
+  
+  <sub>using basic pynput lib</sub>
   
   -Report file generation
-  must implement reportfile hiding
+  
+  <sub>must implement reportfile hiding</sub>
   
   -PATCHED: Email report file auto send
-  smtplib cant login to google anymore, must use different provider
+  
+  <sub>smtplib cant login to google anymore, must use different provider</sub>
   
   -Screenshot capturing
   

@@ -4,7 +4,7 @@
 
 1-Change Email variables
 
-2-Turn it into EXE
+2-Compile it into EXE
 
 
 ### Functionalities:

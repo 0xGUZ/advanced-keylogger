@@ -1,11 +1,11 @@
 # advanced-keylogger v0.1
 
 ### How To  Use:
-1-Change filepath;
 
-2-Change Email settings;
+1-Change Email variables
 
-3-Press ESC to stop program;
+2-Turn it into EXE
+
 
 ### Functionalities:
   -Keylogging

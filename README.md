@@ -18,7 +18,7 @@
   
   -PATCHED: Email report file auto send
   
-  <sub>smtplib cant login to google anymore, must use different provider</sub>
+  <sub>need to enable 2fac auth so you can use python</sub>
   
   -Screenshot capturing
   

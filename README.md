@@ -4,7 +4,9 @@
 
 1-Change Email variables
 
-2-Compile it into EXE
+2-Change Timers and Tickrate
+
+3-Compile it into EXE
 
 
 ### Functionalities:

